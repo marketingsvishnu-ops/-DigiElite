@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DigiElite — Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:#f7fbff;background:radial-gradient(circle at 20% 20%, rgba(199,255,0,0.16), transparent 22%),radial-gradient(circle at 82% 8%, rgba(255,122,0,0.12), transparent 18%),linear-gradient(180deg,#050611 0%,#070a12 100%);}
+    .wrap{max-width:1080px;margin:28px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .logo{font-family:'Big Shoulders Display',sans-serif;font-weight:800;color:#f9fffb;}
+    .logo a{color:inherit;text-decoration:none}
+    .card{background:rgba(255,255,255,0.04);padding:20px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 22px 60px rgba(0,0,0,0.35)}
+    .cart-list{list-style:none;padding:0;margin:0}
+    .cart-list li{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .remove{background:rgba(255,135,75,0.12);border:1px solid rgba(255,122,0,0.2);color:#ffb28b;padding:8px 12px;border-radius:10px}
+    .total{font-weight:800;font-size:1.25rem;margin-top:12px;color:#f7fbff}
+    .checkout{display:inline-block;background:linear-gradient(90deg,var(--primary, #c7ff00),var(--accent, #ff7a00));color:#050611;padding:12px 18px;border-radius:14px;text-decoration:none;margin-top:12px}
+    a{color:rgba(255,255,255,0.85);text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">DigiElite</div>
+      <div><a href="index.html">Continue shopping</a></div>
+    </header>
+
+    <div class="card">
+      <h2>Your Cart</h2>
+      <ul id="cartItems" class="cart-list"></ul>
+      <div id="emptyMessage" style="color:#64748b;margin-top:8px">Your cart is empty. Add services from the homepage.</div>
+      <div id="summary" style="display:none;margin-top:12px">
+        <div class="total" id="cartTotal">Total: ₹0</div>
+        <a id="checkoutBtn" class="checkout" href="#">Proceed to Checkout</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('advigooCart')||'[]');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const emptyMessage = document.getElementById('emptyMessage');
+    const summary = document.getElementById('summary');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    function saveCart(){localStorage.setItem('advigooCart',JSON.stringify(cart));renderCart();}
+    function removeFromCart(name){cart=cart.filter(i=>i.name!==name);saveCart();}
+
+    function renderCart(){
+      cartItems.innerHTML='';
+      if(cart.length===0){emptyMessage.style.display='block';summary.style.display='none';return}
+      emptyMessage.style.display='none';summary.style.display='block';
+      let total=0;
+      cart.forEach(item=>{
+        total+=item.price*item.quantity;
+        const li=document.createElement('li');
+        const label=item.budget?`${item.name} (${item.budget}/day)`:item.name;
+        li.innerHTML=`<div><strong>${label}</strong><div style="font-size:.9rem;color:#6b7280">Qty: ${item.quantity}</div></div><div>₹${item.price*item.quantity} <button class="remove" onclick="removeFromCart('${item.name}')">Remove</button></div>`;
+        cartItems.appendChild(li);
+      });
+      cartTotal.textContent=`Total: ₹${total}`;
+    }
+
+    checkoutBtn.onclick=function(e){
+      e.preventDefault();
+      // Simple mock checkout flow: open checkout.html (to be implemented) or show mock success
+      if(cart.length===0){alert('Cart is empty')}
+      else{ // redirect to checkout page (not integrated with gateway)
+        window.location.href='checkout.html';
+      }
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
