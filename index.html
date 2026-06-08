@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -187,9 +187,9 @@
           <p>Get ad-ready poster creative every day with bold visuals and high-converting messaging for social feeds and campaign ads.</p>
           <a class="btn primary" href="#services">Book a Poster</a>
         </div>
-        <div class="poster-preview" data-folder="daily poster designed">
+        <div class="poster-preview">
           <div class="poster-gallery"></div>
-          <div class="poster-hint">Showing posters from: daily poster designed</div>
+          <div class="poster-hint">Showing poster previews</div>
         </div>
       </section>
 
@@ -400,7 +400,7 @@
       (function(){
         const galleryWrap = document.querySelector('.poster-preview');
         if(!galleryWrap) return;
-        const folder = galleryWrap.dataset.folder || 'daily poster designed';
+        const folder = galleryWrap.dataset.folder ? galleryWrap.dataset.folder.trim() : '';
         let gallery = galleryWrap.querySelector('.poster-gallery');
         if(!gallery){ gallery = document.createElement('div'); gallery.className='poster-gallery'; galleryWrap.appendChild(gallery); }
         gallery.innerHTML = '';
@@ -408,7 +408,7 @@
         let processed = 0;
         fileList.forEach((name, idx)=>{
           const img = new Image();
-          const src = encodeURI(folder + '/' + name);
+          const src = encodeURI(folder ? folder + '/' + name : name);
           img.src = src;
           img.alt = name;
           img.onload = ()=>{
@@ -420,9 +420,9 @@
             else if(idx===2) card.style.transform='rotate(-6deg) translate(12px,28px)';
             gallery.appendChild(card);
             processed++;
-            if(processed===fileList.length && gallery.childElementCount===0){ const note = document.createElement('div'); note.style.color='rgba(255,255,255,0.9)'; note.style.padding='12px'; note.textContent = 'No poster images found in "' + folder + '".'; gallery.appendChild(note); }
+            if(processed===fileList.length && gallery.childElementCount===0){ const note = document.createElement('div'); note.style.color='rgba(255,255,255,0.9)'; note.style.padding='12px'; note.textContent = 'No poster images found.'; gallery.appendChild(note); }
           };
-          img.onerror = ()=>{ processed++; if(processed===fileList.length && gallery.childElementCount===0){ const note = document.createElement('div'); note.style.color='rgba(255,255,255,0.9)'; note.style.padding='12px'; note.textContent = 'No poster images found in "' + folder + '".'; gallery.appendChild(note); } };
+          img.onerror = ()=>{ processed++; if(processed===fileList.length && gallery.childElementCount===0){ const note = document.createElement('div'); note.style.color='rgba(255,255,255,0.9)'; note.style.padding='12px'; note.textContent = 'No poster images found.'; gallery.appendChild(note); } };
         });
       })();
       (function(){
